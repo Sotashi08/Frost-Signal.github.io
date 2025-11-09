@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Frost & Signal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="brand">
+        <h1 class="brand-title">Frost &amp; Signal</h1>
+        <p class="subtitle">Угадай слово</p>
+    </div>
+</header>
+
+<!-- SVG фон: змейки + фильтры для свечения -->
+<div class="bg-art" aria-hidden="true">
+    <svg id="bgSvg" class="bg-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="gMain" x1="0" x2="1">
+                <stop offset="0" stop-color="#0f1418"/>
+                <stop offset="1" stop-color="#070809"/>
+            </linearGradient>
+
+            <linearGradient id="gLine" x1="0" x2="1">
+                <stop offset="0" stop-color="#ffffff" stop-opacity="0.26"/>
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
+            </linearGradient>
+
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="3" result="b"/>
+                <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+
+            <filter id="glow-strong" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="6" result="b"/>
+                <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+
+        <rect width="1600" height="900" fill="url(#gMain)"/>
+
+        <!-- контейнер для змей -->
+        <g id="snakes" stroke="url(#gLine)" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
+    </svg>
+</div>
+
+<main id="stage" class="stage" role="main">
+    <section class="panel" id="mainPanel" aria-live="polite">
+        <div id="secretContainer" class="secret-container" role="form" aria-label="Угадай слово">
+            <div class="label">
+                <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3v6M5 12h14M12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span id="labelText">Секретное слово</span>
+            </div>
+
+            <input id="secretInput" class="secret-input" type="password" placeholder="Введите слово..." aria-label="Секретное слово" autocomplete="off" />
+
+            <button id="submitBtn" class="pushable" aria-label="Подтвердить слово">
+                <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <span id="btnText">Подтвердить</span>
+            </button>
+        </div>
+
+        <div class="status-row">
+            <div id="hint" class="hint" role="status" aria-live="polite">Подсказка: слово из <strong id="wordLen">?</strong> букв</div>
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <div id="sparks" aria-hidden="true"></div>
+</main>
+
+<footer class="site-footer">
+    <small>© Frost & Signal — демо. Made by uwdie.</small>
+</footer>
+
+<canvas id="pageParticles" class="page-particles"></canvas>
+
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
