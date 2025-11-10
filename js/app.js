@@ -376,3 +376,34 @@ window.addEventListener('beforeunload', () => {
     if(snakeAnimationFrame) cancelAnimationFrame(snakeAnimationFrame);
     if(snakeGlowTimeout) clearTimeout(snakeGlowTimeout);
 });
+
+
+// --- Site Panel ---
+const siteLauncherBtn = document.getElementById('siteLauncherBtn');
+const sitePanel = document.getElementById('sitePanel');
+const siteBackdrop = document.getElementById('siteBackdrop');
+const openSiteBtns = document.querySelectorAll('.open-site-btn');
+
+function togglePanel() {
+    const isHidden = sitePanel.getAttribute('aria-hidden') === 'true';
+    sitePanel.setAttribute('aria-hidden', !isHidden);
+}
+
+// --- Event Listeners ---
+siteLauncherBtn.addEventListener('click', togglePanel);
+siteBackdrop.addEventListener('click', togglePanel);
+
+// --- Open sites in new window ---
+openSiteBtns.forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+        const url = btn.dataset.url;
+        if(url) window.open(url,'_blank');
+    });
+});
+
+// --- Keyboard Esc to close ---
+document.addEventListener('keydown', (e)=>{
+    if(e.key==='Escape' && sitePanel.getAttribute('aria-hidden')==='false'){
+        sitePanel.setAttribute('aria-hidden','true');
+    }
+});
