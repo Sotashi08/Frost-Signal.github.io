@@ -173,6 +173,28 @@ const LINE_ERROR_COLOR = 'rgba(255,50,50,';  // красный
 const LINE_SUCCESS_COLOR = 'rgba(0,255,0,';  // зелёный
 const LINE_MERCY = 0.08;
 
+// Порог ширины для мобильного режима (px)
+const MOBILE_MAX_WIDTH = 720;
+
+// Параметры для мобильных устройств
+const PARTICLE_COUNT_MOBILE = 40;          // меньше частиц на мобилках
+const LINE_DISTANCE_MOBILE = 60;           // меньшее расстояние соединения
+const LINE_ANIM_ENABLED_MOBILE = false;    // выключаем переливание линий (sin)
+const PARTICLE_LIFE_MIN_MOBILE = 60;       // минимальное время жизни для мобилки
+const PARTICLE_LIFE_MAX_MOBILE = 160;      // максимальное время жизни для мобилки
+const FRAME_SKIP_MOBILE = 2;               // пропуск кадров (0 = все кадры, 1 = обновлять каждый 2-й, ...)
+
+// Глобальные вычисляемые флаги (обновляются на ресайзе)
+let isMobile = window.innerWidth <= MOBILE_MAX_WIDTH || /Mobi|Android/i.test(navigator.userAgent);
+let ACTIVE_PARTICLE_COUNT = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT;
+let ACTIVE_LINE_DISTANCE = isMobile ? LINE_DISTANCE_MOBILE : LINE_DISTANCE;
+let LINE_ANIM_ENABLED = isMobile ? LINE_ANIM_ENABLED_MOBILE : true;
+let FRAME_SKIP = isMobile ? FRAME_SKIP_MOBILE : 0;
+const PARTICLE_LIFE_OVERRIDE = null;
+
+// frame counter для пропуска кадров
+let _frameCounter = 0;
+
 // --- Canvas ---
 const canvas = document.getElementById('pageParticles');
 const ctx = canvas.getContext('2d');
@@ -184,7 +206,23 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+    resizeCanvas();
+
+    // обновляем mobile-флаг и параметры
+    const prevIsMobile = isMobile;
+    isMobile = window.innerWidth <= MOBILE_MAX_WIDTH || /Mobi|Android/i.test(navigator.userAgent);
+    ACTIVE_PARTICLE_COUNT = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT;
+    ACTIVE_LINE_DISTANCE = isMobile ? LINE_DISTANCE_MOBILE : LINE_DISTANCE;
+    LINE_ANIM_ENABLED = isMobile ? LINE_ANIM_ENABLED_MOBILE : true;
+    FRAME_SKIP = isMobile ? FRAME_SKIP_MOBILE : 0;
+
+    // если изменилась мобильность или размер, пересоздадим частицы меньше багов
+    if (prevIsMobile !== isMobile) {
+        particles = [];
+        for (let i = 0; i < ACTIVE_PARTICLE_COUNT; i++) particles.push(createParticle());
+    }
+});
 resizeCanvas();
 
 // --- Создание одной частицы ---
@@ -199,74 +237,29 @@ function createParticle() {
         angle: Math.random() * Math.PI * 2,
         angularSpeed: (Math.random() - 0.5) * PARTICLE_ANGULAR_SPEED,
         life: 0,
-        maxLife: Math.random() * (PARTICLE_MAX_LIFE_MAX - PARTICLE_MAX_LIFE_MIN) + PARTICLE_MAX_LIFE_MIN
+        maxLife: PARTICLE_LIFE_OVERRIDE ? PARTICLE_LIFE_OVERRIDE : Math.random() * (PARTICLE_MAX_LIFE_MAX - PARTICLE_MAX_LIFE_MIN) + PARTICLE_MAX_LIFE_MIN
+
     };
 }
 
 // --- Инициализация ---
-for (let i = 0; i < PARTICLE_COUNT; i++) {
+ACTIVE_PARTICLE_COUNT = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT;
+particles = [];
+for (let i = 0; i < ACTIVE_PARTICLE_COUNT; i++) {
     particles.push(createParticle());
 }
 
-/* ---------- Mobile / low-power optimization (post-init) ---------- */
-(function optimizeParticlesForDevice() {
-    const w = window.innerWidth;
-    const isMobileWidth = w <= 720 || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-
-    if (isMobileWidth) {
-        // Уменьшим количество частиц (trim массив), чтобы снизить нагрузку
-        const targetCount = Math.max(18, Math.floor(PARTICLE_COUNT * 0.35));
-        if (particles.length > targetCount) {
-            particles.splice(targetCount, particles.length - targetCount);
-        }
-
-        // Замедлим и упростим частицам поведение
-        particles.forEach(p => {
-            p.speedY *= 0.55;         // медленнее вверх
-            p.speedX *= 0.6;          // меньше разброс по сторонам
-            p.angularSpeed *= 0.6;    // меньше вращения
-            p.radius *= 0.85;         // немного меньше размер
-            p.maxLife = Math.max(40, p.maxLife * 0.8); // чуть короче жизнь
-        });
-
-        // Уменьшим расстояние соединения линий, чтобы меньше линий рисовалось
-        if (typeof LINE_DISTANCE !== 'undefined') {
-            try {
-                // если LINE_DISTANCE — const, мы не можем перезаписать; создадим локальный override
-                window.__LINE_DISTANCE_OVERRIDE = Math.max(40, Math.floor(LINE_DISTANCE * 0.45));
-            } catch (e) {
-                window.__LINE_DISTANCE_OVERRIDE = Math.max(40, 60);
-            }
-        } else {
-            window.__LINE_DISTANCE_OVERRIDE = 60;
-        }
-
-        // Установим более низкий devicePixelRatio для канваса рендера (экономия)
-        const dpr = Math.min(1, window.devicePixelRatio || 1);
-        canvas.style.width = `${window.innerWidth}px`;
-        canvas.style.height = `${window.innerHeight}px`;
-        canvas.width = Math.floor(window.innerWidth * dpr);
-        canvas.height = Math.floor(window.innerHeight * dpr);
-        ctx.scale(dpr, dpr);
-    }
-
-    // реагируем на поворот/изменение размеров и повторно оптимизируем
-    let optTimer = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(optTimer);
-        optTimer = setTimeout(() => {
-            // на ресайзе — если мобильный режим включился/выключился — перезагружаем оптимизацию
-            const nowMobile = window.innerWidth <= 720 || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
-            if (nowMobile !== isMobileWidth) {
-                location.reload(); // простое решение: перезагрузить страницу, чтобы применить корректные настройки
-            }
-        }, 220);
-    });
-})();
 
 
 // --- Рендер частиц и линий ---
 function drawParticles() {
+    if (FRAME_SKIP > 0) {
+        _frameCounter++;
+        if (_frameCounter % (FRAME_SKIP + 1) !== 0) {
+            requestAnimationFrame(drawParticles);
+            return;
+        }
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < particles.length; i++) {
@@ -277,9 +270,10 @@ function drawParticles() {
             const dy = p1.y - p2.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            const lineDist = (typeof window.__LINE_DISTANCE_OVERRIDE === 'number') ? window.__LINE_DISTANCE_OVERRIDE : LINE_DISTANCE;
-            if (dist < lineDist) {
-                const alpha = LINE_MERCY + LINE_MERCY * Math.sin(Date.now() / 300 + (p1.x + p2.x)/50);
+            if (dist < ACTIVE_LINE_DISTANCE) {
+                const base = LINE_MERCY;
+                const shimmer = LINE_ANIM_ENABLED ? (LINE_MERCY * Math.sin(Date.now() / 300 + (p1.x + p2.x)/50)) : 0;
+                const alpha = base + shimmer;
 
                 // Выбор цвета линии
                 let color = LINE_BASE_COLOR;

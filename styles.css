@@ -96,45 +96,28 @@ html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Seg
     .pushable{min-width:100px}
 }
 
-/* ---------- Mobile / Responsive tweaks ---------- */
-
-/* Общие изменения для мобильных */
-@media (max-width: 920px) {
-    .panel { width: calc(100% - 40px); padding: 18px; }
+/* --- Mobile tweaks --- */
+@media (max-width: 720px) {
+    /* общий layout */
+    .panel { padding: 14px; width: calc(100% - 28px); border-radius: 12px; }
     .brand-title { font-size: 16px; }
     .subtitle { font-size: 12px; }
-    .secret-input { min-width: 160px; padding: 10px 12px; font-size: 15px; }
-    .pushable { padding: 10px 14px; min-width: 100px; font-size: 14px; }
-    .stage { padding: 24px; }
 
-    /* визуально уменьшаем интенсивность фона (змей) */
-    .bg-svg { opacity: 0.78; filter: none; }
-    /* уменьшить размыливание и тени, чтобы экономить на рендере */
-    .panel { box-shadow: 0 8px 24px rgba(1,6,10,0.5); backdrop-filter: blur(4px); }
+    /* входное поле и кнопка компактнее */
+    .secret-input { min-width: 140px; padding: 10px; font-size: 14px; }
+    .pushable { padding: 10px 12px; min-width: 96px; font-size: 14px; }
+
+    /* меняем поведение spark/декора — уменьшаем их количество/видимость */
+    .spark { opacity: 0; pointer-events: none; }
+
+    /* footer: чуть меньше эффектов */
+    .site-footer small { font-size: 12px; -webkit-text-fill-color: transparent; }
 }
 
-/* Мобильный режим — компактнее ещё */
-@media (max-width: 480px) {
+/* мелкие стили для ещё меньших устройств */
+@media (max-width: 420px) {
     .brand-title { font-size: 15px; }
-    .panel { padding: 14px; border-radius: 12px; }
-    .secret-input { min-width: 120px; font-size: 14px; }
-    .status-row { flex-direction: column; gap: 8px; align-items: flex-start; }
-    .site-footer small { font-size: 11px; }
-
-    /* скрываем тяжелые spark-элементы в мобильном */
-    .spark { display: none !important; }
-}
-
-/* Canvas частицы: охватывать весь экран, но не мешать мобильному layout */
-.page-particles {
-    will-change: transform;
-    image-rendering: optimizeSpeed;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Уменьшаем svg-фильтры на мобильных, чтобы экономить CPU/GPU */
-@media (max-width: 720px) {
-    svg #glow feGaussianBlur,
-    svg #glow-strong feGaussianBlur { stdDeviation: 2 !important; }
-    .bg-svg { opacity: 0.85; }
+    .panel { padding: 12px; }
+    .secret-input { min-width: 120px; }
+    .pushable { padding: 9px 10px; min-width: 84px; }
 }
