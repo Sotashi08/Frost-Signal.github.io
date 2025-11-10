@@ -155,18 +155,18 @@ function flashSnakeSuccess(){
 }
 
 // footer particles
-const PARTICLE_COUNT = 90;
-const PARTICLE_SIZE_MIN = 5;
-const PARTICLE_SIZE_MAX = 7;
+const PARTICLE_COUNT = 65;
+const PARTICLE_SIZE_MIN = 4;
+const PARTICLE_SIZE_MAX = 6;
 const PARTICLE_SPEED_Y_MIN = 0.3;
 const PARTICLE_SPEED_Y_MAX = 1;
 const PARTICLE_SPEED_X_MAX = 0.5;
 const PARTICLE_ANGULAR_SPEED = 0.02;
-const PARTICLE_MAX_LIFE_MIN = 80;
-const PARTICLE_MAX_LIFE_MAX = 400;
+const PARTICLE_MAX_LIFE_MIN = 75;
+const PARTICLE_MAX_LIFE_MAX = 320;
 
 // --- Настройки линий ---
-const LINE_DISTANCE = 100;
+const LINE_DISTANCE = 150;
 const LINE_WIDTH = 1.9;
 const LINE_BASE_COLOR = 'rgba(88,166,255,';  // синий
 const LINE_ERROR_COLOR = 'rgba(255,50,50,';  // красный

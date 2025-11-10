@@ -95,3 +95,94 @@ html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Seg
     .panel{padding:16px}
     .pushable{min-width:100px}
 }
+
+/* ---------------------------
+   Responsive tweaks (mobile)
+   --------------------------- */
+
+/* Общая адаптация на планшетах и маленьких десктопах */
+@media (max-width: 900px) {
+    .panel {
+        width: calc(100% - 40px);
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .brand-title { font-size: 16px; }
+    .subtitle { font-size: 13px; }
+
+    .status-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .hint { font-size: 13px; }
+}
+
+/* Основные мобильные правки — телефоны в портрете */
+@media (max-width: 620px) {
+    /* Панель — удобная ширина, больше внутренних отступов */
+    .panel {
+        width: calc(100% - 28px);
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 12px 30px rgba(1,6,10,0.55);
+    }
+
+    /* Секция с полем и кнопкой — вертикально и крупнее */
+    .secret-container {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .label { display: none; } /* убираем лишний лейбл, экономим место */
+
+    .secret-input {
+        min-width: 100%;
+        font-size: 16px;
+        padding: 12px 14px;
+        border-radius: 10px;
+    }
+
+    .pushable {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    /* Уменьшаем визуальную громоздкость свечения */
+    .brand-title { font-size: 16px; text-shadow: 0 4px 10px rgba(140,190,230,0.05); }
+    .site-header { top: 8px; padding: 6px 12px; }
+
+    /* Меньше деталей в статус-строке */
+    .status-row { gap: 8px; align-items: center; justify-content: space-between; }
+    .hint { font-size: 13px; }
+    .feedback { font-size: 13px; }
+
+    /* Canvas: оставляем, но уменьшаем частоту рендера через CSS hint (JS останется) */
+    .page-particles { height: 100%; } /* занимает экран, но particles JS ограничит нагрузки */
+}
+
+/* Очень узкие экраны — компактные размеры */
+@media (max-width: 420px) {
+    .brand-title { font-size: 15px; }
+    .panel { padding: 12px; border-radius: 10px; }
+    .secret-input { font-size: 15px; padding: 10px; }
+    .pushable { font-size: 14px; padding: 10px; }
+
+    .site-footer small { font-size: 11px; }
+    .page-particles { pointer-events: none; } /* безопасно */
+}
+
+/* Touch usability: увеличим зоны на тач-устройствах */
+@media (hover: none) and (pointer: coarse) {
+    .pushable { padding: 14px 16px; }
+    .secret-input { padding: 14px 14px; font-size: 16px; }
+    .panel { box-shadow: 0 10px 26px rgba(1,6,10,0.5); }
+}
+
+/* При очень маленькой высоте экрана (экран/клавиатура) убираем часть визуализаций */
+@media (max-height: 500px) {
+    .bg-art { opacity: 0.6; }           /* тоньше фон чтобы не мешал */
+    .site-header { opacity: 0.95; }     /* немного прозрачнее */
+    .page-particles { display: none; }  /* экономим ресурсы, клавиатура открыта */
+}
