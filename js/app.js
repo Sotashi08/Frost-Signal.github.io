@@ -334,6 +334,19 @@ function updateProgressUI(){
     }
 }
 
+let score = 0;
+const scoreEl = document.getElementById('score');
+
+function incrementScore() {
+    score++;
+    if(scoreEl){
+        scoreEl.textContent = score;
+        // короткая анимация прыжка
+        scoreEl.classList.add('jump');
+        setTimeout(() => scoreEl.classList.remove('jump'), 300);
+    }
+}
+
 /* -------------------------
    Reveal logic (reveal all occurrences of random unrevealed letter)
    -------------------------*/
@@ -423,6 +436,7 @@ btn.addEventListener('click', ()=>{
         playSuccess();
         showFeedback('Слово угадано!', true);
         input.value = '';
+        incrementScore();
         // small celebration
         flashSnakeSuccess();
         flashGreenLines(900);

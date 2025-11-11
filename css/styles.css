@@ -268,5 +268,16 @@ body.reduced-motion .page-particles, body.low-power .page-particles{opacity:0.3;
 }
 
 
+#score {
+    display: inline-block;
+    transition: transform 0.28s ease, color 0.28s ease;
+}
+
+#score.jump {
+    transform: scale(1.6);
+    color: #58A6FF;
+}
+
+
 
 
