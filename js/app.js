@@ -55,7 +55,6 @@ let wordPool = [];
    DOM элементы
    -------------------------*/
 const btn = document.getElementById('submitBtn');
-const btnText = document.getElementById('btnText');
 const input = document.getElementById('secretInput');
 const feedback = document.getElementById('feedback');
 const hint = document.getElementById('hint');
@@ -145,7 +144,6 @@ let showGreenLines = false;
 /* -------------------------
    Утилиты
    -------------------------*/
-const rand = (a,b)=>Math.random()*(b-a)+a;
 const randInt = (a,b)=>Math.floor(Math.random()*(b-a+1)+a);
 const shuffle = arr => {
     for(let i=arr.length-1;i>0;i--){
