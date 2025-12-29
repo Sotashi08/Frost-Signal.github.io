@@ -1,7 +1,4 @@
 
-/* -------------------------
-   Категории слов (>=20 слов в каждой)
-   -------------------------*/
 const CATEGORIES = {
     "Фрукты": [
         "яблоко","банан","апельсин","груша","виноград","киви","ананас","персик","слива","арбуз",
@@ -45,15 +42,11 @@ const CATEGORIES = {
     ]
 };
 
-/* -------------------------
-   Пользовательский словарь (будет заполнен выбранной категорией)
-   -------------------------*/
-let DEFAULT_WORDS = []; // теперь управляется через категории
+
+let DEFAULT_WORDS = [];
 let wordPool = [];
 
-/* -------------------------
-   DOM элементы
-   -------------------------*/
+
 const btn = document.getElementById('submitBtn');
 const input = document.getElementById('secretInput');
 const feedback = document.getElementById('feedback');
@@ -61,18 +54,14 @@ const hint = document.getElementById('hint');
 const snakesGroup = document.getElementById('snakes');
 const wordLenSpan = document.getElementById('wordLen');
 
-/* -------------------------
-   Новые DOM элементы подсказок
-   -------------------------*/
-let hintContainer = null;     // обёртка под инпутом (mask + progress + button)
-let maskDisplay = null;       // отображение _ _ а _ _
-let progressBarInner = null;  // inner div прогресса
-let revealBtn = null;         // кнопка "Открыть букву"
-let revealStat = null;        // текст "Открыто X / Y"
 
-/* -------------------------
-   Аудио и состояние
-   -------------------------*/
+let hintContainer = null;
+let maskDisplay = null;
+let progressBarInner = null;
+let revealBtn = null;
+let revealStat = null;
+
+
 let audioCtx = null;
 let currentSecret = null;
 let currentCategory = null;
@@ -82,9 +71,7 @@ let snakeGlowTimeout = null;
 let snakeSpeed = 0.8;
 let snakeSpeedTarget = 0.8;
 
-/* -------------------------
-   Подсказки: состояние + ограничения
-   -------------------------*/
+
 let revealedIndices = [];         // массив булевых флагов по индексам слова
 let revealedLettersSet = new Set();// какие буквы уже открыты
 let wrongAttempts = 0;             // счётчик неверных подряд попыток
@@ -94,11 +81,7 @@ let revealCooldown = false;        // временный блок (кулдау�
 const REVEAL_COOLDOWN_MS = 1500;   // пауза между подсказками
 const AUTO_REVEAL_AFTER = 3;       // автоподсказка после N неверных попыток
 
-/* -------------------------
-   Adaptive / Particles config
-   (kept intact — снизу идёт оригинальный код)
-   -------------------------*/
-/* основные параметры (можешь менять) */
+
 const PARTICLE_COUNT = 65;
 const PARTICLE_SIZE_MIN = 4;
 const PARTICLE_SIZE_MAX = 6;
