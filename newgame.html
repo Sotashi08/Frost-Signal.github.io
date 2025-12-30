@@ -104,6 +104,46 @@
                     </div>
                 </li>
 
+                <li class="site-item">
+                    <div class="thumb">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Фоновая рамка -->
+                            <rect x="6" y="6" width="36" height="36" stroke="#58A6FF" stroke-width="2"/>
+
+                            <!-- Внешнее пульсирующее кольцо -->
+                            <circle cx="24" cy="24" r="12" stroke="#58A6FF" stroke-width="1.5" opacity="0.4">
+                                <animate attributeName="r" values="10;14;10" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+
+                            <!-- Среднее кольцо с лёгким дыханием -->
+                            <circle cx="24" cy="24" r="8" stroke="#58A6FF" stroke-width="1.5" opacity="0.8">
+                                <animate attributeName="r" values="7;9;7" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="stroke-width" values="1.5;2;1.5" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+
+                            <!-- Центральный яркий круг с мягким пульсом -->
+                            <circle cx="24" cy="24" r="4" fill="#58A6FF">
+                                <animate attributeName="r" values="3.5;4.5;3.5" dur="2s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+
+                            <!-- Дополнительное внутреннее свечение (белое ядро) -->
+                            <circle cx="24" cy="24" r="2" fill="#FFFFFF">
+                                <animate attributeName="r" values="1.5;2.5;1.5" dur="1.5s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.9;1;0.9" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                    </div>
+                    <div class="meta">
+                        <div class="title">Neo Flow</div>
+                        <div class="desc">Почувствуй себя Нео из матрицы</div>
+                        <div class="actions">
+                            <button class="btn primary open-site-btn" data-url="pulse.html">Открыть</button>
+                        </div>
+                    </div>
+                </li>
+
             </ul>
         </div>
 

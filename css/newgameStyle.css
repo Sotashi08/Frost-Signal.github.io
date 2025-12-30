@@ -228,4 +228,14 @@ a {
 }
 
 
+svg {
+    filter: drop-shadow(0 0 8px #58A6FF);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+}
+
 
