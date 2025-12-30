@@ -1,131 +1,138 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap');
 
 :root {
-    --bg-color: #050505;
+    --bg-color: #030304;
     --primary-cyan: #00f3ff;
-    --danger-red: #ff0055;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --secondary-cyan: #008f96;
+    --danger-red: #ff003c;
+    --glass-bg: rgba(8, 12, 16, 0.85); /* Более темное стекло */
+    --glass-border: rgba(0, 243, 255, 0.2);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none; /* Чтобы текст не выделялся при кликах */
-}
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-font-smoothing: antialiased; }
 
 body {
     background-color: var(--bg-color);
     color: white;
     font-family: 'Rajdhani', sans-serif;
-    overflow: hidden; /* Убираем скролл */
-    height: 100vh;
-    width: 100vw;
+    overflow: hidden; height: 100vh; width: 100vw;
+    cursor: default;
 }
 
-/* --- Canvas --- */
-canvas {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+body.game-running { cursor: none; }
+
+/* --- HEX GRID BACKGROUND --- */
+.hex-grid {
+    position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background-image:
+            radial-gradient(circle, transparent 20%, var(--bg-color) 90%),
+            url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="86.6" viewBox="0 0 50 86.6"%3E%3Cpath stroke="%2300f3ff" stroke-width="0.5" stroke-opacity="0.05" fill="none" d="M25 0 L50 14.4 L50 43.3 L25 57.7 L0 43.3 L0 14.4 Z" /%3E%3C/svg%3E');
+    transform: perspective(800px) rotateX(40deg) translateY(0);
+    animation: gridScroll 40s linear infinite;
+    z-index: -1; pointer-events: none;
 }
 
-/* --- UI Layer --- */
-.ui-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    pointer-events: none; /* Пропускаем клики сквозь пустые места */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+@keyframes gridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 500px; }
 }
 
-/* Score Board */
-.score-board {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--primary-cyan);
-    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-    pointer-events: none;
+/* --- SYSTEM CONSOLE (Background Text) --- */
+.console-overlay {
+    position: absolute; bottom: 20px; left: 20px;
+    width: 300px; height: 200px;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+    opacity: 0.4;
+    mask-image: linear-gradient(to bottom, transparent, black 20%);
 }
 
-/* Modals & Glassmorphism */
+.console-lines {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--primary-cyan);
+    line-height: 1.4;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 100%;
+}
+
+/* --- UI Layers --- */
+.ui-layer { position: absolute; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; justify-content: center; align-items: center; }
+.hud { position: absolute; width: 100%; height: 100%; transition: opacity 0.4s ease; }
+.hidden-ui { opacity: 0; pointer-events: none; }
+
+.hud-top-left { position: absolute; top: 30px; left: 30px; }
+.hud-top-right { position: absolute; top: 30px; right: 30px; }
+.hud-bottom-right { position: absolute; bottom: 30px; right: 30px; text-align: right; }
+
+/* Score */
+.score-value { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700; color: white; text-shadow: 0 0 15px var(--primary-cyan); margin-left: 10px; }
+.score-bar-bg { width: 200px; height: 4px; background: rgba(255,255,255,0.1); margin-top: 5px; position: relative; overflow: hidden; }
+.score-bar-fill { height: 100%; width: 0%; background: var(--primary-cyan); box-shadow: 0 0 15px var(--primary-cyan); transition: width 0.3s; }
+
+/* Abort Button */
+.abort-btn {
+    pointer-events: auto; background: rgba(255, 0, 60, 0.1); border: 1px solid rgba(255, 0, 60, 0.4);
+    color: var(--danger-red); padding: 8px 15px; font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;
+}
+.abort-btn:hover { background: rgba(255, 0, 60, 0.3); box-shadow: 0 0 15px var(--danger-red); }
+.abort-icon { font-weight: bold; }
+
+/* Ability HUD */
+.ability-status { color: rgba(255,255,255,0.7); }
+.ability-cooldown-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); margin-top: 5px; }
+.ability-cooldown-bar .fill { width: 100%; height: 100%; background: var(--primary-cyan); }
+
+/* --- MODALS --- */
 .modal {
-    text-align: center;
-    padding: 3rem 4rem;
-    border-radius: 16px;
-    pointer-events: auto; /* Включаем клики для кнопок */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto; position: relative;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px); padding: 3rem 4rem;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+    transform: perspective(1000px) rotateX(0deg);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex; flex-direction: column; align-items: center;
 }
+.hidden { opacity: 0; pointer-events: none; transform: perspective(1000px) rotateX(20deg) scale(0.9); }
 
-.glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px); /* Эффект размытия фона */
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+/* Cyber Ring Animation */
+.cyber-ring {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 350px; height: 350px; border: 1px dashed rgba(0, 243, 255, 0.15); border-radius: 50%;
+    z-index: -1; animation: spinRing 20s linear infinite; pointer-events: none;
 }
-
-.hidden {
-    display: none !important;
+.cyber-ring::before {
+    content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border: 1px solid rgba(0, 243, 255, 0.05); border-radius: 50%; border-left-color: transparent; border-right-color: transparent;
+    animation: spinRing 10s reverse linear infinite;
 }
+@keyframes spinRing { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
 /* Typography */
-.title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: 4px;
-    background: linear-gradient(90deg, #fff, var(--primary-cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.title { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: 5px; margin-bottom: 0.5rem; text-align: center; }
+.shimmer-text {
+    background: linear-gradient(110deg, #888 30%, #fff 45%, var(--primary-cyan) 50%, #fff 55%, #888 70%);
+    background-size: 200% auto; -webkit-background-clip: text; color: transparent;
+    animation: shine 4s ease-in-out infinite;
 }
+@keyframes shine { to { background-position: 200% center; } }
 
-.error-text {
-    background: linear-gradient(90deg, #fff, var(--danger-red));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+.error-text { color: var(--danger-red); text-shadow: 0 0 20px var(--danger-red); }
+.separator { height: 1px; width: 80px; background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent); margin: 0 auto 2rem; }
 
-.subtitle {
-    font-size: 1.2rem;
-    opacity: 0.7;
-    margin-bottom: 2rem;
-    letter-spacing: 1px;
-}
+.stats-container { display: flex; gap: 40px; margin-bottom: 2rem; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.3); }
+.stat-box { text-align: center; }
+.stat-label { font-size: 0.6rem; color: var(--secondary-cyan); letter-spacing: 1px; display: block; }
+.stat-value { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; }
 
 /* Buttons */
 .cyber-btn {
-    background: transparent;
-    color: var(--primary-cyan);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-    padding: 12px 30px;
-    border: 1px solid var(--primary-cyan);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    overflow: hidden;
+    background: transparent; border: 1px solid var(--primary-cyan); color: var(--primary-cyan);
+    padding: 16px 50px; font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 3px;
+    cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
 }
+.cyber-btn:hover { background: rgba(0, 243, 255, 0.15); box-shadow: 0 0 30px rgba(0, 243, 255, 0.3); }
 
-.cyber-btn:hover {
-    background: var(--primary-cyan);
-    color: black;
-    box-shadow: 0 0 20px var(--primary-cyan);
-}
-
-.cyber-btn:active {
-    transform: scale(0.95);
-}
+.menu-link { margin-top: 15px; font-size: 0.8rem; color: #777; cursor: pointer; transition: 0.3s; letter-spacing: 1px; border-bottom: 1px solid transparent; }
+.menu-link:hover { color: var(--primary-cyan); border-color: var(--primary-cyan); }

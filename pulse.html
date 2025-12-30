@@ -2,28 +2,97 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Flow | Futuristic Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEON FLOW | System Override</title>
     <link rel="stylesheet" href="css/pulseStyle.css">
 </head>
 <body>
 
+<div class="hex-grid"></div> <div class="ambient-glow"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<div id="systemConsole" class="console-overlay">
+    <div class="console-lines" id="consoleLines"></div>
+</div>
+
 <div class="ui-layer">
-    <div class="score-board">
-        <span class="label">СИНХРОНИЗАЦИЯ:</span>
-        <span id="scoreEl">0</span>%
+
+    <div id="gameHUD" class="hud hidden-ui">
+        <div class="hud-top-left">
+            <div class="hud-row">
+                <span class="label-tiny">SYNC RATE</span>
+                <span class="score-value"><span id="scoreEl">0</span>%</span>
+            </div>
+            <div class="score-bar-bg">
+                <div id="scoreBar" class="score-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="hud-top-right">
+            <button id="abortBtn" class="abort-btn">
+                <span class="abort-icon">✕</span>
+                <span class="abort-text">ABORT</span>
+            </button>
+        </div>
+
+        <div class="hud-bottom-right">
+            <div class="ability-status">
+                <span class="key-hint">[LMB]</span>
+                <span class="ability-name">SHOCKWAVE</span>
+                <div class="ability-cooldown-bar">
+                    <div id="shockwaveReadyBar" class="fill"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="startModal" class="modal glass-panel">
-        <h1 class="title">NEON FLOW</h1>
-        <p class="subtitle">Управляй ядром. Избегай помех.</p>
-        <button id="startGameBtn" class="cyber-btn">ЗАПУСК СИСТЕМЫ</button>
+        <div class="cyber-ring"></div>
+
+        <div class="modal-content">
+            <h1 class="title shimmer-text" data-text="NEON FLOW">NEON FLOW</h1>
+            <div class="separator"></div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="stat-label">MAX SYNC</span>
+                    <span class="stat-value" id="highScoreDisplay">0%</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">LOGS</span>
+                    <span class="stat-value" id="gamesPlayedDisplay">0</span>
+                </div>
+            </div>
+
+            <div class="tips-row">
+                <div class="tip-item"><span class="dot blue"></span>ENERGY</div>
+                <div class="tip-item"><span class="dot red"></span>VIRUS</div>
+            </div>
+
+            <button id="startGameBtn" class="cyber-btn">
+                <span class="btn-content">INITIALIZE</span>
+                <div class="btn-glitch-effect"></div>
+            </button>
+        </div>
     </div>
 
     <div id="gameOverModal" class="modal glass-panel hidden">
-        <h1 class="title error-text">КРИТИЧЕСКИЙ СБОЙ</h1>
-        <p class="subtitle">Итоговая синхронизация: <span id="finalScore">0</span>%</p>
-        <button id="restartBtn" class="cyber-btn">ПЕРЕЗАГРУЗКА</button>
+        <div class="modal-content">
+            <h1 class="title error-text glitch-text">CRITICAL FAILURE</h1>
+            <p class="subtitle">CONNECTION LOST</p>
+
+            <div class="final-score-box">
+                <span class="final-label">SYNC RESULT</span>
+                <span class="final-value"><span id="finalScore">0</span>%</span>
+            </div>
+
+            <button id="restartBtn" class="cyber-btn">
+                <span class="btn-content">REBOOT SYSTEM</span>
+            </button>
+
+            <div class="menu-link" id="backToMenuBtn">RETURN TO TERMINAL</div>
+        </div>
     </div>
 </div>
 
