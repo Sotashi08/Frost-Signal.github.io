@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Flow | Futuristic Game</title>
+    <link rel="stylesheet" href="css/pulseStyle.css">
+</head>
+<body>
+
+<div class="ui-layer">
+    <div class="score-board">
+        <span class="label">СИНХРОНИЗАЦИЯ:</span>
+        <span id="scoreEl">0</span>%
+    </div>
+
+    <div id="startModal" class="modal glass-panel">
+        <h1 class="title">NEON FLOW</h1>
+        <p class="subtitle">Управляй ядром. Избегай помех.</p>
+        <button id="startGameBtn" class="cyber-btn">ЗАПУСК СИСТЕМЫ</button>
+    </div>
+
+    <div id="gameOverModal" class="modal glass-panel hidden">
+        <h1 class="title error-text">КРИТИЧЕСКИЙ СБОЙ</h1>
+        <p class="subtitle">Итоговая синхронизация: <span id="finalScore">0</span>%</p>
+        <button id="restartBtn" class="cyber-btn">ПЕРЕЗАГРУЗКА</button>
+    </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script src="js/pulseGame.js"></script>
+</body>
+</html>
