@@ -275,8 +275,8 @@ const modalBody = document.getElementById('modal-body');
 
 const projects = {
     'proj1': {
-        title: 'High-Load Microservice',
-        content: '<p>Архитектура на базе Spring Cloud. Реализована асинхронная обработка сообщений через Kafka. Покрытие тестами 90%.</p><ul style="margin-top:10px; color:#aaa; list-style-position: inside;"><li>Java 17</li><li>Docker & K8s</li><li>PostgreSQL</li></ul>'
+        title: 'Game manager',
+        content: '<p>Менеджер игр созданных мной через веб-архитектуры</p><ul style="margin-top:10px; color:#aaa; list-style-position: inside;"><li>HTML</li><li>CSS</li></ul> <a href="tictactoe.html">Перейти -></a>'
     },
     'proj2': {
         title: 'C++ Game Engine',
@@ -324,3 +324,29 @@ if (!isMobile) {
         });
     });
 }
+
+
+let docTitle = document.title;
+let titleIndex = 0;
+let isReversing = false;
+
+function typewriterTitle() {
+    const fullText = "I love Java ❤ ";
+    if (!isReversing) {
+        document.title = fullText.substring(0, titleIndex + 1);
+        titleIndex++;
+        if (titleIndex === fullText.length) {
+            isReversing = true;
+            setTimeout(typewriterTitle, 2000); // Пауза в конце
+            return;
+        }
+    } else {
+        document.title = fullText.substring(0, titleIndex - 1);
+        titleIndex--;
+        if (titleIndex === 0) {
+            isReversing = false;
+        }
+    }
+    setTimeout(typewriterTitle, isReversing ? 100 : 200);
+}
+typewriterTitle();
