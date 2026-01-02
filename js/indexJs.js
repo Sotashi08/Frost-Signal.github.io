@@ -288,6 +288,7 @@ const projects = {
     }
 };
 
+
 function openModal(id) {
     const project = projects[id];
     if(!project) return;
