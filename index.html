@@ -1,186 +1,333 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Frost & Signal</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Backend Developer | Portfolio</title>
+    <link rel="stylesheet" href="css/indexStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<header class="site-header">
-    <div class="brand">
-        <h1 class="brand-title">Frost &amp; Signal</h1>
-        <p class="subtitle">Угадай слово</p>
+
+<div id="preloader" class="preloader">
+    <div class="loader-content">
+        <div class="logo-loader">DEV<span class="highlight">.JAVA</span></div>
+        <div class="loader-track">
+            <div class="loader-fill" id="loaderFill"></div>
+        </div>
+        <div class="loader-status">INITIALIZING SYSTEM... <span id="loadPercent">0%</span></div>
     </div>
-</header>
-
-<div class="bg-art" aria-hidden="true">
-    <svg id="bgSvg" class="bg-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="gMain" x1="0" x2="1">
-                <stop offset="0" stop-color="#0f1418"/>
-                <stop offset="1" stop-color="#070809"/>
-            </linearGradient>
-
-            <linearGradient id="gLine" x1="0" x2="1">
-                <stop offset="0" stop-color="#ffffff" stop-opacity="0.26"/>
-                <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
-            </linearGradient>
-
-            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="3" result="b"/>
-                <feMerge>
-                    <feMergeNode in="b"/>
-                    <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-            </filter>
-
-            <filter id="glow-strong" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="6" result="b"/>
-                <feMerge>
-                    <feMergeNode in="b"/>
-                    <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-            </filter>
-        </defs>
-
-        <rect width="1600" height="900" fill="url(#gMain)"/>
-        <g id="snakes" stroke="url(#gLine)" fill="none" stroke-linecap="round" stroke-linejoin="round"></g>
-    </svg>
 </div>
 
-<main id="stage" class="stage" role="main">
-    <section class="panel" id="mainPanel" aria-live="polite">
-        <div id="secretContainer" class="secret-container" role="form" aria-label="Угадай слово">
-            <div class="label">
-                <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3v6M5 12h14M12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span id="labelText">Секретное слово</span>
+<div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="progressBar"></div>
+</div>
+
+<div class="noise-overlay"></div>
+<div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+</div>
+
+<div class="settings-panel glass">
+    <div class="settings-toggle" title="Сменить тему"><i class="fas fa-palette"></i></div>
+    <div class="colors">
+        <span class="color-btn" style="background-color: #00f2ff;" onclick="setTheme('#00f2ff')"></span>
+        <span class="color-btn" style="background-color: #ff0055;" onclick="setTheme('#ff0055')"></span>
+        <span class="color-btn" style="background-color: #adff02;" onclick="setTheme('#adff02')"></span>
+        <span class="color-btn" style="background-color: #ff9900;" onclick="setTheme('#ff9900')"></span>
+    </div>
+</div>
+
+<div class="scroll-to-top glass" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<nav class="navbar glass">
+    <a href="#home" class="logo">
+        <div class="logo-wrapper">
+            DEV<span class="highlight">.JAVA</span>
+            <div class="logo-progress" id="logoProgress"></div>
+        </div>
+    </a>    <ul class="nav-links">
+        <li><a href="#home" class="active">Главная</a></li>
+        <li><a href="#about">Стек</a></li>
+        <li><a href="#projects">Проекты</a></li>
+        <li><a href="#timeline">Путь</a></li>
+        <li><a href="#contact">Контакты</a></li>
+    </ul>
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+</nav>
+
+<div class="mobile-menu-overlay glass">
+    <ul class="mobile-links">
+        <li><a href="#home">Главная</a></li>
+        <li><a href="#about">Обо мне</a></li>
+        <li><a href="#projects">Проекты</a></li>
+        <li><a href="#contact">Контакты</a></li>
+    </ul>
+</div>
+
+<section id="home" class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="badge glass">Available for work</div>
+            <h1 class="glitch-text" data-text="Имя Фамилия">Имя Фамилия</h1>
+            <h2 class="subtitle">Java Backend Developer</h2>
+            <p class="typewriter">Пишу чистый код на <span id="typing-text"></span></p>
+            <div class="hero-btns">
+                <a href="#projects" class="btn primary-btn">Смотреть проекты</a>
+                <a href="#contact" class="btn secondary-btn glass">Связаться</a>
+            </div>
+        </div>
+        <div class="hero-visual glass-card-3d no-tilt-mobile" data-tilt>
+            <i class="fab fa-java java-icon"></i>
+            <div class="code-decoration">
+                <div class="code-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <code>
+                    <span class="kwd">public class</span> <span class="cls">Developer</span> {<br>
+                    &nbsp;&nbsp;<span class="kwd">void</span> <span class="mth">createFuture</span>() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">while</span>(alive) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coffee();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </code>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="section">
+    <div class="container">
+        <h2 class="section-title">Технический <span class="highlight">Арсенал</span></h2>
+
+        <div class="info-grid reveal">
+            <div class="info-card glass no-tilt-mobile" data-tilt>
+                <i class="fas fa-server icon"></i>
+                <h3>Backend</h3>
+                <p>Spring Boot, Hibernate, Microservices, REST & GraphQL API.</p>
+            </div>
+            <div class="info-card glass no-tilt-mobile" data-tilt>
+                <i class="fas fa-code-branch icon"></i>
+                <h3>DevOps & Tools</h3>
+                <p>Docker, Kubernetes, CI/CD (Jenkins/GitLab), Maven, Gradle.</p>
+            </div>
+            <div class="info-card glass no-tilt-mobile" data-tilt>
+                <i class="fas fa-database icon"></i>
+                <h3>Data</h3>
+                <p>PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch.</p>
+            </div>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text glass reveal">
+                <h3>Обо мне</h3>
+                <p>Я создаю надежные серверные решения. Мой код — это баланс между производительностью и читаемостью. Люблю решать сложные алгоритмические задачи и оптимизировать SQL-запросы.</p>
+                <div class="stats-row">
+                    <div class="stat-item"><h3>3+</h3><p>Года опыта</p></div>
+                    <div class="stat-item"><h3>20+</h3><p>Проектов</p></div>
+                    <div class="stat-item"><h3>A+</h3><p>Качество</p></div>
+                </div>
             </div>
 
-            <input id="secretInput" class="secret-input" placeholder="Введите слово..." aria-label="Секретное слово" autocomplete="off" />
+            <div class="skills-container glass reveal">
+                <h3>Hard Skills</h3>
+                <div class="skill-bar">
+                    <div class="info"><span>Java Core / Spring</span><span>95%</span></div>
+                    <div class="bar"><span class="progress" style="width: 95%"></span></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="info"><span>SQL / Database Design</span><span>85%</span></div>
+                    <div class="bar"><span class="progress" style="width: 85%"></span></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="info"><span>Node.js / JS</span><span>70%</span></div>
+                    <div class="bar"><span class="progress" style="width: 70%"></span></div>
+                </div>
 
-            <button id="submitBtn" class="pushable" aria-label="Подтвердить слово">
-                <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                <span id="btnText">Подтвердить</span>
-            </button>
+                <div class="skill-tags">
+                    <span>Spring Security</span>
+                    <span>JUnit</span>
+                    <span>Docker</span>
+                    <span>Git</span>
+                    <span>Linux</span>
+                    <span>AWS</span>
+                </div>
+            </div>
         </div>
+    </div>
+</section>
 
-        <div class="status-row">
-            <div id="hint" class="hint" role="status" aria-live="polite">Подсказка: слово из <strong id="wordLen">?</strong> букв</div>
-            <div id="feedback" class="feedback" aria-live="polite"></div>
+<section id="projects" class="section">
+    <div class="container">
+        <h2 class="section-title">Избранные <span class="highlight">Проекты</span></h2>
+        <p class="section-desc">Кликните на карточку для подробностей</p>
+
+        <div class="projects-grid">
+            <div class="project-card glass-card-3d no-tilt-mobile" data-tilt onclick="openModal('proj1')">
+                <div class="card-image">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <div class="card-content">
+                    <h3>High-Load Service</h3>
+                    <p>Микросервис на Spring Boot</p>
+                    <div class="tags"><span>Java</span><span>Kafka</span></div>
+                    <button class="btn-text">Подробнее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="project-card glass-card-3d no-tilt-mobile" data-tilt onclick="openModal('proj2')">
+                <div class="card-image">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="card-content">
+                    <h3>3D Engine Core</h3>
+                    <p>Игровой движок (Pet Project)</p>
+                    <div class="tags"><span>C++</span><span>OpenGL</span></div>
+                    <button class="btn-text">Подробнее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="project-card glass-card-3d no-tilt-mobile" data-tilt onclick="openModal('proj3')">
+                <div class="card-image">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Analytics Dashboard</h3>
+                    <p>Система анализа данных</p>
+                    <div class="tags"><span>Python</span><span>React</span></div>
+                    <button class="btn-text">Подробнее <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
         </div>
-        <div id="scoreContainer" class="hint" aria-live="polite">
-            Угадано слов: <span id="score">0</span>
+    </div>
+</section>
+
+<section id="timeline" class="section">
+    <div class="container">
+        <h2 class="section-title" style="text-align: center">Карьерный <span class="highlight">Путь</span></h2>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content glass">
+                    <span class="date">2024 - Сейчас</span>
+                    <h3>Senior Java Developer</h3>
+                    <p>Проектирование архитектуры и менторство.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content glass">
+                    <span class="date">2022 - 2024</span>
+                    <h3>Middle Backend Developer</h3>
+                    <p>Разработка REST API и оптимизация запросов.</p>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div id="sparks" aria-hidden="true"></div>
-</main>
+<section id="contact" class="section">
+    <div class="container">
+        <h2 class="section-title">Начать <span class="highlight">Сотрудничество</span></h2>
+        <div class="contact-wrapper glass reveal">
+            <div class="contact-info">
+                <h3>Контакты</h3>
+                <p>Готов обсудить проект или вакансию. Отвечаю в течение 24 часов.</p>
+                <div class="item">
+                    <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                    <span>email@example.com</span>
+                </div>
+                <div class="item">
+                    <div class="icon-box"><i class="fab fa-telegram-plane"></i></div>
+                    <span>@telegram_user</span>
+                </div>
+                <div class="socials">
+                    <a href="#" aria-label="Github"><i class="fab fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
 
-<footer class="site-footer" role="contentinfo">
-    <small>© Frost & Signal — демо. Made by uwdie.</small>
+            <form class="contact-form" id="contactForm">
+                <div class="input-group">
+                    <input type="text" id="name" required>
+                    <label>Ваше имя</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="message" required></textarea>
+                    <label>Сообщение</label>
+                </div>
+                <button type="submit" class="btn primary-btn submit-btn">
+                    <span>Отправить</span>
+                    <div class="success-icon"><i class="fas fa-check"></i></div>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer class="main-footer">
+    <div class="footer-blur"></div>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#home" class="logo">DEV<span class="highlight">.JAVA</span></a>
+                <p>Проектирую и создаю масштабируемые backend-системы с любовью к чистому коду.</p>
+            </div>
+            <div class="footer-nav">
+                <h4>Навигация</h4>
+                <ul>
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#about">Стек</a></li>
+                    <li><a href="#projects">Проекты</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Социальные сети</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Все права защищены. Создано в цифровой среде.</p>
+            <div class="status-indicator">
+                <span class="status-dot"></span> System Operational
+            </div>
+        </div>
+    </div>
 </footer>
 
-
-<button class="site-link-btn" id="siteLauncherBtn" aria-label="Открыть сайты">
-    &#9776;
-</button>
-
-<div class="site-panel" id="sitePanel" aria-hidden="true">
-
-
-    <div class="site-panel__backdrop" id="siteBackdrop"></div>
-
-
-    <div class="site-panel__sheet">
-        <div class="site-panel__head">
-            <h2>Выберите мини-игру</h2>
-        </div>
-
-        <div class="site-panel__content">
-            <p class="lead">Ниже список доступных мини-игр. Нажмите "Открыть", чтобы перейти.</p>
-
-            <ul class="site-list">
-                <li class="site-item">
-                    <div class="thumb">
-
-                        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="#58A6FF" stroke-width="2"/></svg>
-                    </div>
-                    <div class="meta">
-                        <div class="title">Угадай слово</div>
-                        <div class="desc">Классическая мини-игра, угадайте секретное слово.</div>
-                        <div class="actions">
-                            <button class="btn primary open-site-btn" data-url="index.html">Открыть</button>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="site-item">
-                    <div class="thumb">
-                        <svg viewBox="0 0 48 48" fill="none"><rect x="6" y="6" width="36" height="36" stroke="#58A6FF" stroke-width="2"/></svg>
-                    </div>
-                    <div class="meta">
-                        <div class="title">Крестики-нолики</div>
-                        <div class="desc">Играй против ИИ или PvP.</div>
-                        <div class="actions">
-                            <button class="btn primary open-site-btn" data-url="newgame.html">Открыть</button>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="site-item">
-                    <div class="thumb">
-                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Фоновая рамка -->
-                            <rect x="6" y="6" width="36" height="36" stroke="#58A6FF" stroke-width="2"/>
-
-                            <!-- Внешнее пульсирующее кольцо -->
-                            <circle cx="24" cy="24" r="12" stroke="#58A6FF" stroke-width="1.5" opacity="0.4">
-                                <animate attributeName="r" values="10;14;10" dur="4s" repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.3;0.6;0.3" dur="4s" repeatCount="indefinite"/>
-                            </circle>
-
-                            <!-- Среднее кольцо с лёгким дыханием -->
-                            <circle cx="24" cy="24" r="8" stroke="#58A6FF" stroke-width="1.5" opacity="0.8">
-                                <animate attributeName="r" values="7;9;7" dur="3s" repeatCount="indefinite"/>
-                                <animate attributeName="stroke-width" values="1.5;2;1.5" dur="3s" repeatCount="indefinite"/>
-                            </circle>
-
-                            <!-- Центральный яркий круг с мягким пульсом -->
-                            <circle cx="24" cy="24" r="4" fill="#58A6FF">
-                                <animate attributeName="r" values="3.5;4.5;3.5" dur="2s" repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
-                            </circle>
-
-                            <!-- Дополнительное внутреннее свечение (белое ядро) -->
-                            <circle cx="24" cy="24" r="2" fill="#FFFFFF">
-                                <animate attributeName="r" values="1.5;2.5;1.5" dur="1.5s" repeatCount="indefinite"/>
-                                <animate attributeName="opacity" values="0.9;1;0.9" dur="1.5s" repeatCount="indefinite"/>
-                            </circle>
-                        </svg>
-                    </div>
-                    <div class="meta">
-                        <div class="title">Neo Flow</div>
-                        <div class="desc">Почувствуй себя Нео из матрицы</div>
-                        <div class="actions">
-                            <button class="btn primary open-site-btn" data-url="pulse.html">Открыть</button>
-                        </div>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-
-        <div class="site-panel__foot">© 2025 uwdie</div>
+<div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+    <div class="modal-content glass" onclick="event.stopPropagation()">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
     </div>
 </div>
 
-
-
-
-<canvas id="pageParticles" class="page-particles" aria-hidden="true"></canvas>
-
-<script type="module" src="js/app.js"></script>
+<script src="js/indexJs.js"></script>
 </body>
 </html>
